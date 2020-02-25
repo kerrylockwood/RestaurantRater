@@ -22,7 +22,7 @@ namespace RestaurantRater.Models
         public double Rating { get; set; }
 
         [Required]
-        [Range(1, 5, "Dollar Sign must be between 1 and 5")]
+        [Range(1, 5)]
         public int DollarSigns { get; set; }
     }
 }
