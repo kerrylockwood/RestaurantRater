@@ -15,6 +15,7 @@ namespace RestaurantRater.Controllers
         private readonly RestaurantDbContext _context = new RestaurantDbContext();
 
         // POST (endpoint) - receive this Restaurant and add to database
+        [HttpPost]
         public async Task<IHttpActionResult> PostRestaurant(Restaurant restaurant)
         {
             if (ModelState.IsValid && restaurant != null)  // ModelState is checked upon entry to this method
@@ -33,6 +34,7 @@ namespace RestaurantRater.Controllers
         }
 
         // GET ALL
+        [HttpGet]
         public async Task<IHttpActionResult> GetAll()
         {
             List<Restaurant> restaurants = await _context.Restaurants.ToListAsync();
@@ -40,6 +42,7 @@ namespace RestaurantRater.Controllers
         }
 
         // GET BY ID
+        [HttpGet]
         public async Task<IHttpActionResult> GetById(int id)
         {
             Restaurant restaurant = await _context.Restaurants.FindAsync(id);
@@ -51,6 +54,29 @@ namespace RestaurantRater.Controllers
         }
 
         // PUT (update)
+        [HttpPut]
+        public async Task<IHttpActionResult> UpdateRestaurant([FromUri]int id, [FromBody]Restaurant model)
+        {
+            if (ModelState.IsValid && model != null)
+            {
+                // this is our entity
+                Restaurant restaurant = await _context.Restaurants.FindAsync(id);
+                if (restaurant != null)
+                {
+                    restaurant.Name = model.Name;
+                    restaurant.Rating = model.Rating;
+                    restaurant.Style = model.Style;
+                    restaurant.DollarSigns = model.DollarSigns;
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok();
+                }
+                return NotFound();
+            }
+            return BadRequest(ModelState);
+        }
+
         // DELETE BY ID
 
     }
